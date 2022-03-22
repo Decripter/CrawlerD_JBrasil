@@ -4,11 +4,11 @@ from crawler import Crawler
 
 def get_vultr():
     vultr = Crawler(
-        "https://www.vultr.com/pricing",
+        "https://www.vultr.com/pricing/#cloud-compute/",
         "<!-- CLOUD COMPUTE -->",
         "<!-- DEDICATED CLOUD COMPUTE -->",
         "pt__row-content",
-    )
+    )  # Instance of Crawler_object
 
     vultr.cpu.find_pattern_start = 'data-row=""><div class="pt__cell js-price"><strong>'
     vultr.cpu.find_pattern_end = 'CPU</div><div class="pt_'
@@ -38,12 +38,13 @@ def get_vultr():
     vultr.pricce_month.find_pattern_end = " </strong>&nbsp;/mo</div>"
 
     vultr.content.pop(0)  # discard the header
-    vultr.extract_content()
+    vultr.extract_full_content()
+
     return vultr.content_list
 
 
 def print_list_arguments_help():
-    print(
+    print(  # print help
         """
 --print url => Print results directly on screen
 --save_csv url => Store results on csv file
@@ -68,7 +69,7 @@ else:
             if sys.argv[2] == "vultr":
                 print(get_vultr())
         else:
-            print("You must pass more one argument")
+            print("You must be pass more one argument => Crawler_object")
 
     elif sys.argv[1] == "--save_csv":
         pass
