@@ -18,7 +18,7 @@ class Crawler:
     memory = Item("memory")
     storage = Item("storage")
     bandwidth = Item("bandwidth")
-    pricce_month = Item("pricce_month")
+    price_month = Item("price_month")
 
     content = ""
     content_list = []
@@ -30,17 +30,17 @@ class Crawler:
         req.add_header("User-Agent", "urllib-example/0.1 (Contact: . . .)")
         content = str(urllib.request.urlopen(req).read())
 
-        posicao_start = int(content.index(delimiter_start))
-        posicao_end = int(content.index(delimiter_end))
+        position_start = int(content.index(delimiter_start))
+        position_end = int(content.index(delimiter_end))
 
-        extracted_content = content[posicao_start:posicao_end]
+        extracted_content = content[position_start:position_end]
 
         content_whitout_n = extracted_content.replace("\\n", "")
         content = content_whitout_n.replace("\\t", "")
 
         self.content = content.split(cut_slice_pattern)
 
-    def find_item_content(self, row_content, item):
+    def extract_item_content(self, row_content, item):
 
         position_s = int(row_content.index(item.find_pattern_start))
         position_e = int(row_content.index(item.find_pattern_end))
@@ -51,13 +51,13 @@ class Crawler:
         content = result.replace(item.to_remove, "")
         return content
 
-    def extract_content(self):
+    def extract_full_content(self):
         for row in self.content:
-            cpu = self.find_item_content(row, self.cpu)
-            memory = self.find_item_content(row, self.memory)
-            storage = self.find_item_content(row, self.storage)
-            bandwidth = self.find_item_content(row, self.bandwidth)
-            price_month = self.find_item_content(row, self.pricce_month)
+            cpu = self.extract_item_content(row, self.cpu)
+            memory = self.extract_item_content(row, self.memory)
+            storage = self.extract_item_content(row, self.storage)
+            bandwidth = self.extract_item_content(row, self.bandwidth)
+            price_month = self.extract_item_content(row, self.price_month)
 
             self.content_list.append(
                 {
