@@ -4,6 +4,7 @@ import urllib.request
 
 
 class Item:
+
     name = ""
     find_pattern_start = ""
     find_pattern_end = ""
@@ -22,10 +23,10 @@ class Crawler:
     bandwidth = Item("bandwidth")
     price_month = Item("price_month")
 
-    url_root = ""
+    url_root = ""  # this is extracted from url like http://abc.com/teste/alfa => http://abc.com
 
-    content = ""
-    content_list = []
+    content = ""  # this will contain the raw data feched
+    content_list = []  # this will contain the clean and structured data
 
     def __init__(self, url, delimiter_start, delimiter_end, cut_slice_pattern):
 
@@ -35,36 +36,38 @@ class Crawler:
 
         req.add_header("User-Agent", "urllib-example/0.1 (Contact: . . .)")
         content = str(urllib.request.urlopen(req).read())
-        try:
+
+        try:  # try fetch the tata from url
             position_start = int(content.index(delimiter_start))
             position_end = int(content.index(delimiter_end))
 
-        except ValueError:
+        except ValueError:  # if dont find the data, look to links on the page to find the path
 
-            links = self.find_links(content)
+            links = self.find_links(content)  # extract the urls
 
-            for link in links:
+            for link in links:  # try into each link
 
                 if link.find(".") != -1:
-                    print("Url ignored: " + self.url_root + "" + link)
+                    print( "Url ignored: " + self.url_root + "" + link )  # ignore links that contains '.' like aas.css or abc.com
                     continue
+
                 print("Trying fetch data from: " + self.url_root + "" + link)
-                time.sleep(random.randint(1, 4))
+                time.sleep( random.randint(1, 4))  # wait 1-4 seconds between each try to avoid firewall block
 
-                try:
+                try:  # try fetch again using links
 
-                    req = urllib.request.Request(self.url_root + "" + link)
+                    req = urllib.request.Request( self.url_root + "" + link )  # url root + link extracted
                     req.add_header("User-Agent", "urllib-example/0.1 (Contact: . . .)")
                     content = str(urllib.request.urlopen(req).read())
 
                     position_start = int(content.index(delimiter_start))
                     position_end = int(content.index(delimiter_end))
 
-                except urllib.error.URLError:
+                except urllib.error.URLError:  # invalid url
 
                     continue
 
-                except ValueError:
+                except ValueError:  # data dont find
 
                     continue
 
@@ -76,24 +79,23 @@ class Crawler:
                     content = content_whitout_n.replace("\\t", "")
 
                     self.content = content.split(cut_slice_pattern)
-                    break
+
+                    break  # stop loop for
         else:
 
-            extracted_content = content[position_start:position_end]
+            extracted_content = content[ position_start:position_end ]  # extract the data between delimiters
 
-            content_whitout_n = extracted_content.replace("\\n", "")
+            content_whitout_n = extracted_content.replace( "\\n", "" )  # the raw data contains specials characters
             content = content_whitout_n.replace("\\t", "")
 
-            self.content = content.split(cut_slice_pattern)
+            self.content = content.split( cut_slice_pattern )  # create a list of rows from the raw data
 
     def extract_item_content(self, row_content, item):
 
         position_s = int(row_content.index(item.find_pattern_start))
         position_e = int(row_content.index(item.find_pattern_end))
 
-        result = row_content[
-            position_s + len(item.find_pattern_start) : position_e + item.leters_to_add
-        ]
+        result = row_content[ position_s + len(item.find_pattern_start) : position_e + item.leters_to_add ]
 
         content = result.replace(item.to_remove, "")
 
@@ -148,8 +150,6 @@ class Crawler:
 
         for link in range(len(result)):
 
-            links.append(
-                content[result[link] + 6 : result[link] + result_end[link] + 6]
-            )
+            links.append( content[result[link] + 6 : result[link] + result_end[link] + 6] )
 
         return links
