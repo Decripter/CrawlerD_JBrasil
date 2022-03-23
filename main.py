@@ -93,6 +93,7 @@ else:
 
     elif sys.argv[1] == "--save_csv":
         pass
+    
     else:
         print("You pass an invalid argument, this is a help:")
         print_list_arguments_help()
