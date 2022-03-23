@@ -1,3 +1,4 @@
+import json
 import sys  # for handling arguments
 from crawler import Crawler
 
@@ -50,6 +51,9 @@ def get_vultr():
 
     return vultr.content_list
 
+def export_json(dictionary, name):
+    with open(name+'.json', "w") as outfile:
+        json.dump(dictionary, outfile)
 
 def print_list_arguments_help():
     print(  # print help
@@ -65,7 +69,7 @@ If any url is passed as argument the default_urls.txt files will be used as argu
 
 def print_error_lack_arguments(args_passed):
     if len(args_passed) == 1:
-        print("You dont pass any argument, this is a help:")
+        print("You don't pass any argument, this is a help:")
         print_list_arguments_help()
 
 
@@ -79,7 +83,16 @@ else:
         else:
             print("You must be pass more one argument => Crawler_object")
 
+    elif sys.argv[1] == "--save_json":
+
+        if len(sys.argv) > 2:
+            if sys.argv[2] == "vultr":
+                export_json(get_vultr(), "vultr")
+        else:
+            print("You must be pass more one argument => Crawler_object")
+
     elif sys.argv[1] == "--save_csv":
         pass
-    elif sys.argv[1] == "--save_json":
-        pass
+    else:
+        print("You pass an invalid argument, this is a help:")
+        print_list_arguments_help()
