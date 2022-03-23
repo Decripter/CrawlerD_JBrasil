@@ -4,7 +4,7 @@ from crawler import Crawler
 
 def get_vultr():
     vultr = Crawler(
-        "https://www.vultr.com/pricing/#cloud-compute/",
+        "https://www.vultr.com/products/cloud-compute/#pricing",
         "<!-- CLOUD COMPUTE -->",
         "<!-- DEDICATED CLOUD COMPUTE -->",
         "pt__row-content",
@@ -34,8 +34,8 @@ def get_vultr():
     vultr.bandwidth.to_remove = "</strong>&nbsp;"
     vultr.bandwidth.leters_to_add = len(vultr.bandwidth.find_pattern_end)
 
-    vultr.pricce_month.find_pattern_start = 'pt__cell--price pt__cell-price"><strong>'
-    vultr.pricce_month.find_pattern_end = " </strong>&nbsp;/mo</div>"
+    vultr.price_month.find_pattern_start = 'pt__cell--price pt__cell-price"><strong>'
+    vultr.price_month.find_pattern_end = " </strong>&nbsp;/mo</div>"
 
     vultr.content.pop(0)  # discard the header
     vultr.extract_full_content()
