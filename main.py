@@ -58,9 +58,9 @@ def export_json(dictionary, name):
 def print_list_arguments_help():
     print(  # print help
         """
---print url => Print results directly on screen
---save_csv url => Store results on csv file
---save_json url => Store results on json format file
+--print Crawler_object => Print results directly on screen
+--save_csv Crawler_object => Store results on csv file
+--save_json Crawler_object => Store results on json format file
 
 If any url is passed as argument the default_urls.txt files will be used as argument.
     """
