@@ -142,14 +142,15 @@ class Crawler:
         links = []
         result_end = []
 
-        result = [i for i in range(len(content)) if content.startswith("href=", i)]
+        # find links based on the 'href' atribute it return a list of position where start each link
+        result = [i for i in range(len(content)) if content.startswith("href=", i)] 
 
         for href in result:
-
+            # search for the end of href atribuute looking for the close (")
             result_end.append(content[href + 6 :].find('"'))
 
         for link in range(len(result)):
-
+            # fill thenlinks array with extracted links from result position to result_end position
             links.append( content[result[link] + 6 : result[link] + result_end[link] + 6] )
 
         return links

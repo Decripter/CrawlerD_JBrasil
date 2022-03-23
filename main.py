@@ -4,7 +4,7 @@ from crawler import Crawler
 
 def get_vultr():
 
-    # Instance of Crawler_object
+    # Instance of Crawler_object 
 
     vultr = Crawler(
         "https://www.vultr.com/products/cloud-compute/#pricing",
