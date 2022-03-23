@@ -1,4 +1,5 @@
 import json
+import csv
 import sys  # for handling arguments
 from crawler import Crawler
 
@@ -55,6 +56,15 @@ def export_json(dictionary, name):
     with open(name+'.json', "w") as outfile:
         json.dump(dictionary, outfile)
 
+def export_csv(to_csv, name):
+
+    keys = to_csv[0].keys()
+
+    with open(name+'.csv', 'w', newline='') as output_file:
+        dict_writer = csv.DictWriter(output_file, keys)
+        dict_writer.writeheader()
+        dict_writer.writerows(to_csv)
+
 def print_list_arguments_help():
     print(  # print help
         """
@@ -84,7 +94,6 @@ else:
             print("You must be pass more one argument => Crawler_object")
 
     elif sys.argv[1] == "--save_json":
-
         if len(sys.argv) > 2:
             if sys.argv[2] == "vultr":
                 export_json(get_vultr(), "vultr")
@@ -92,8 +101,12 @@ else:
             print("You must be pass more one argument => Crawler_object")
 
     elif sys.argv[1] == "--save_csv":
-        pass
-    
+        if len(sys.argv) > 2:
+            if sys.argv[2] == "vultr":
+                export_csv(get_vultr(), "vultr")
+        else:
+            print("You must be pass more one argument => Crawler_object")
+
     else:
         print("You pass an invalid argument, this is a help:")
         print_list_arguments_help()
