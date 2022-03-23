@@ -3,23 +3,29 @@ from crawler import Crawler
 
 
 def get_vultr():
+
+    # Instance of Crawler_object
+
     vultr = Crawler(
         "https://www.vultr.com/products/cloud-compute/#pricing",
         "<!-- CLOUD COMPUTE -->",
         "<!-- DEDICATED CLOUD COMPUTE -->",
         "pt__row-content",
-    )  # Instance of Crawler_object
+    )
 
+    # Pattern to find CPU data
     vultr.cpu.find_pattern_start = 'data-row=""><div class="pt__cell js-price"><strong>'
     vultr.cpu.find_pattern_end = 'CPU</div><div class="pt_'
     vultr.cpu.to_remove = "</strong>&nbsp;"
     vultr.cpu.leters_to_add = 3
 
+    # Pattern to find Memory data
     vultr.memory.find_pattern_start = 'PU</div><div class="pt__cell js-price"><strong>'
     vultr.memory.find_pattern_end = "</strong>&nbsp;GB"
     vultr.memory.to_remove = "</strong>&nbsp;"
     vultr.memory.leters_to_add = len(vultr.memory.find_pattern_end)
 
+    # Pattern to find Storage data
     vultr.storage.find_pattern_start = (
         'dth</span></div><div class="pt__cell js-price"><strong>'
     )
@@ -27,13 +33,15 @@ def get_vultr():
     vultr.storage.to_remove = "</strong>&nbsp;"
     vultr.storage.leters_to_add = 2
 
+    # Pattern to find Bandwidth data
     vultr.bandwidth.find_pattern_start = (
         'Memory</span></div><div class="pt__cell js-price"><strong>'
     )
     vultr.bandwidth.find_pattern_end = 'TB<span class="is-hidden-lg-up"> Bandwidth'
     vultr.bandwidth.to_remove = "</strong>&nbsp;"
-    vultr.bandwidth.leters_to_add = len(vultr.bandwidth.find_pattern_end)
+    vultr.bandwidth.leters_to_add = 2
 
+    # Pattern to find Price/Month data
     vultr.price_month.find_pattern_start = 'pt__cell--price pt__cell-price"><strong>'
     vultr.price_month.find_pattern_end = " </strong>&nbsp;/mo</div>"
 

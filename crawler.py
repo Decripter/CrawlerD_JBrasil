@@ -1,3 +1,5 @@
+import time
+import random
 import urllib.request
 
 
@@ -36,27 +38,45 @@ class Crawler:
         try:
             position_start = int(content.index(delimiter_start))
             position_end = int(content.index(delimiter_end))
+
         except ValueError:
+
             links = self.find_links(content)
+
             for link in links:
+
+                if link.find(".") != -1:
+                    print("Url ignored: " + self.url_root + "" + link)
+                    continue
+                print("Trying fetch data from: " + self.url_root + "" + link)
+                time.sleep(random.randint(1, 4))
+
                 try:
+
                     req = urllib.request.Request(self.url_root + "" + link)
                     req.add_header("User-Agent", "urllib-example/0.1 (Contact: . . .)")
                     content = str(urllib.request.urlopen(req).read())
 
                     position_start = int(content.index(delimiter_start))
                     position_end = int(content.index(delimiter_end))
+
                 except urllib.error.URLError:
+
                     continue
+
                 except ValueError:
+
                     continue
+
                 else:
+
                     extracted_content = content[position_start:position_end]
 
                     content_whitout_n = extracted_content.replace("\\n", "")
                     content = content_whitout_n.replace("\\t", "")
 
                     self.content = content.split(cut_slice_pattern)
+                    break
         else:
 
             extracted_content = content[position_start:position_end]
@@ -74,7 +94,9 @@ class Crawler:
         result = row_content[
             position_s + len(item.find_pattern_start) : position_e + item.leters_to_add
         ]
+
         content = result.replace(item.to_remove, "")
+
         return content
 
     def extract_full_content(self):
@@ -100,6 +122,7 @@ class Crawler:
         url_root = ""
 
         for char in range(len(url) - 1):
+
             if (
                 url[char] == "/"
                 and url[char + 1] != "/"
@@ -113,15 +136,20 @@ class Crawler:
         return url_root
 
     def find_links(self, content):
+
         links = []
         result_end = []
+
         result = [i for i in range(len(content)) if content.startswith("href=", i)]
 
         for href in result:
+
             result_end.append(content[href + 6 :].find('"'))
 
         for link in range(len(result)):
+
             links.append(
                 content[result[link] + 6 : result[link] + result_end[link] + 6]
             )
+
         return links
